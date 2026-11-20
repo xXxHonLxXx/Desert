@@ -28,7 +28,7 @@ function redirect(cookie) { return new Response(null,{status:303,headers:{...hea
 export function editorHandler(editorHtml) {
   return async function handle(request,env) {
     const {pathname,protocol,origin}=new URL(request.url);
-    if (!env.EDIT_CODE || env.EDIT_CODE.length<12 || !env.SESSION_SECRET || env.SESSION_SECRET.length<32) return page('Der Bearbeitungszugang ist noch nicht eingerichtet.',503);
+    if (!env.EDIT_CODE || env.EDIT_CODE.length<6 || !env.SESSION_SECRET || env.SESSION_SECRET.length<32) return page('Der Bearbeitungszugang ist noch nicht eingerichtet.',503);
     const suffix='; Path=/; HttpOnly; SameSite=Strict'+(protocol==='https:'?'; Secure':'');
     if(request.method==='POST' && (pathname==='/zugang'||pathname==='/abmelden')) {
       if(request.headers.get('Origin')!==origin) return page('Ungültige Anfrage.',403);

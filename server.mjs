@@ -3,11 +3,11 @@ import {readFile} from 'node:fs/promises';
 import {Readable} from 'node:stream';
 import {editorHandler} from './access.mjs';
 const {EDIT_CODE,SESSION_SECRET,PORT='3000',PUBLIC_ORIGIN='http://localhost:'+ (process.env.PORT || 3000)}=process.env;
-if(!EDIT_CODE||EDIT_CODE.length<6||!SESSION_SECRET||SESSION_SECRET.length<6)throw new Error('EDIT_CODE (mindestens 6 Zeichen) und SESSION_SECRET (mindestens 6 Zeichen) setzen.');
+if(!EDIT_CODE||EDIT_CODE.length<6||!SESSION_SECRET||SESSION_SECRET.length<32)throw new Error('EDIT_CODE (mindestens 6 Zeichen) und SESSION_SECRET (mindestens 32 Zeichen) setzen.');
 const origin=new URL(PUBLIC_ORIGIN).origin;
 const editor=await readFile(new URL('./editor.html',import.meta.url),'utf8');
 const viewer=await readFile(new URL('./index.html',import.meta.url),'utf8');
-const handler=editorHandler(editor.replace("'/index'","location.origin+'/index'"));
+const handler=editorHandler(editor.replace("'/ansicht'","location.origin+'/ansicht'").replace("'/index'","location.origin+'/ansicht'"));
 createServer(async (req,res)=>{
  try{
   const url=new URL(origin+(req.url?.startsWith('/')?req.url:'/'));
