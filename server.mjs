@@ -6,8 +6,8 @@ const {EDIT_CODE,SESSION_SECRET,PORT='3000',PUBLIC_ORIGIN='http://localhost:'+ (
 if(!EDIT_CODE||EDIT_CODE.length<6||!SESSION_SECRET||SESSION_SECRET.length<6)throw new Error('EDIT_CODE (mindestens 6 Zeichen) und SESSION_SECRET (mindestens 6 Zeichen) setzen.');
 const origin=new URL(PUBLIC_ORIGIN).origin;
 const editor=await readFile(new URL('./editor.html',import.meta.url),'utf8');
-const viewer=await readFile(new URL('./ansicht.html',import.meta.url),'utf8');
-const handler=editorHandler(editor.replace("'/ansicht'","location.origin+'/ansicht'"));
+const viewer=await readFile(new URL('./index.html',import.meta.url),'utf8');
+const handler=editorHandler(editor.replace("'/index'","location.origin+'/index'"));
 createServer(async (req,res)=>{
  try{
   const url=new URL(origin+(req.url?.startsWith('/')?req.url:'/'));
