@@ -10,7 +10,7 @@ const viewer=await readFile(new URL('./index.html',import.meta.url),'utf8');
 const handler=editorHandler(editor.replace("'/ansicht'","location.origin+'/ansicht'").replace("'/index'","location.origin+'/ansicht'"));
 createServer(async (req,res)=>{
  try{
-  const url=new URL(origin+(req.url?.startsWith('/')?req.url:'/'));
+  const url = new URL(req.url || '/', PUBLIC_ORIGIN);
   const method=req.method||'GET';
   const request=new Request(url,{method,headers:req.headers,...(method==='GET'||method==='HEAD'?{}:{body:Readable.toWeb(req),duplex:'half'})});
   const reply=url.pathname==='/ansicht'&&method==='GET'
