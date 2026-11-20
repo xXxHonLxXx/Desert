@@ -1,32 +1,21 @@
-# HONL Wüstensturm auf deinem Server
+# HONL Wüstensturm – Render-Version (korrigiert)
 
-Das Paket enthält den Bearbeitungsplan und die schreibgeschützte Ansicht für Team A und Team B. Es braucht einen Server mit Node.js 22 oder neuer. Es gibt keine npm-Abhängigkeiten.
+Dateien ins Hauptverzeichnis des GitHub-Repositories **Desert** hochladen, bestehende Dateien gleichen Namens ersetzen.
 
-## Lokal starten
+Render-Einstellungen:
+- Runtime: Node
+- Build Command: `echo "No build required"`
+- Start Command: `node server.mjs`
+- Environment: `EDIT_CODE` = eigener Code mit mindestens 6 Zeichen
+- Environment: `SESSION_SECRET` = zufälliger Wert mit mindestens 32 Zeichen
+- Environment: `PUBLIC_ORIGIN` = exakt die eigene HTTPS-Render-Adresse (ohne Slash am Ende), z. B. `https://dein-dienst.onrender.com`
+- `PORT` nicht selbst setzen; Render vergibt ihn.
 
-1. Entpacke den Ordner und öffne ihn im Terminal.
-2. Setze einen eigenen Bearbeitungscode mit mindestens 12 Zeichen und ein separates zufälliges Geheimnis für die Sitzung. Mit diesem Befehl kannst du einen Zufallswert erzeugen.
+Seiten:
+- `/` = geschützter Bearbeitungsmodus
+- `/ansicht` = öffentliche schreibgeschützte Ansicht
+- Im Bearbeitungsmodus über **Ansichtslink erstellen** einen vollständigen Link mit dem aktuellen Plan generieren.
 
-   ```sh
-   node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
-   ```
+Hinweis: Der Plan wird im Browser gespeichert. Für Gerätewechsel **Sicherung herunterladen** und **Sicherung laden** verwenden.
 
-3. Hinterlege die Werte als Umgebungsvariablen und starte den Server.
-
-   ```sh
-   EDIT_CODE='dein-eigener-langer-code' SESSION_SECRET='dein-zufallswert-mit-mindestens-32-zeichen' node server.mjs
-   ```
-
-4. Öffne http://localhost:3000 zum Bearbeiten. Die Leseansicht liegt unter http://localhost:3000/ansicht.
-
-## Online bereitstellen
-
-Lass Node als Dienst laufen und leite deine HTTPS-Domain per Reverse Proxy an `127.0.0.1:3000` weiter. Setze `PUBLIC_ORIGIN` auf die öffentliche Adresse mit HTTPS, zum Beispiel `https://wuestensturm.example.org`. Mit `PORT` kannst du den internen Port ändern. Schütze den Bearbeitungscode und das Sitzungsgeheimnis über die Konfiguration deines Servers.
-
-Erstelle im Bearbeitungsplan einen Ansichtslink, um deinen bearbeiteten Stand freizugeben. Der sechsstellige Lesecode 857825 zeigt die mitgelieferte Ausgangseinteilung.
-
-## Einteilungen mitnehmen
-
-Im bisherigen Bearbeitungsplan auf **Sicherung herunterladen** klicken und auf dem neuen Server über **Sicherung laden** importieren. Der Download enthält beide Teams samt Mitgliedern, Ersatzspielern und Zuteilungen. Die mitgelieferten HTML-Dateien enthalten den Ausgangsstand. Deine späteren Änderungen liegen im Browser, bis du sie als JSON sicherst.
-
-Gebäude werden mit deutschen und englischen Namen angezeigt.
+Änderungen: Safari-kompatible Anmeldung mit CSRF-Schutz; funktionierender absoluter Ansichtslink; korrekt verknüpfte Dateien; 6-stelliger Code erlaubt.
