@@ -7,7 +7,7 @@ if(!EDIT_CODE||EDIT_CODE.length<6||!SESSION_SECRET||SESSION_SECRET.length<32)thr
 const origin=new URL(PUBLIC_ORIGIN).origin;
 const editor=await readFile(new URL('./editor.html',import.meta.url),'utf8');
 const viewer=await readFile(new URL('./index.html',import.meta.url),'utf8');
-const handler=editorHandler(editor.replace("'/ansicht'","location.origin+'/ansicht'").replace("'/index'","location.origin+'/ansicht'"));
+const handler=editorHandler(editor.replace("'/index'","location.origin+'/ansicht'").replace("'/index'","location.origin+'/index'"));
 createServer(async (req,res)=>{
  try{
   const url = new URL(req.url || '/', PUBLIC_ORIGIN);
