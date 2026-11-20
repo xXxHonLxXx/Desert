@@ -39,15 +39,14 @@ export function editorHandler(editorHtml) {
     if (!env.EDIT_CODE || env.EDIT_CODE.length<6 || !env.SESSION_SECRET || env.SESSION_SECRET.length<32) return page('Der Bearbeitungszugang ist noch nicht eingerichtet.',503);
     const suffix='; Path=/; HttpOnly; SameSite=Strict'+(protocol==='https:'?'; Secure':'');
     if(request.method==='POST' && (pathname==='/zugang'||pathname==='/abmelden')) {
-      // Reject known cross-origin submissions, but do not require Origin:
-      // some browsers omit it on normal same-origin form navigation.
-      const submittedOrigin=request.headers.get('Origin');
-      const referer=request.headers.get('Referer');
-      const fetchSite=request.headers.get('Sec-Fetch-Site');
-      if ((submittedOrigin && submittedOrigin!==origin) ||
-          (referer && (()=>{try{return new URL(referer).origin!==origin;}catch{return true;}})()) ||
-          (fetchSite && fetchSite!=='same-origin' && fetchSite!=='none')) {
-        return page('Ungültige Anfrage (abweichende Herkunft).',403);
+      // Render kann die interne Host-/Protokoll-Adresse anders darstellen als
+      // der Browser. Deshalb NICHT den Browser-Origin mit request.url vergleichen.
+      // Cross-Site-POSTs werden stattdessen ueber den Browser-Header abgewiesen.
+      // Zusaetzlich verlangt die Anmeldung den einmaligen CSRF-Formularwert,
+      // der mit einem HttpOnly-/SameSite=Strict-Cookie uebereinstimmen muss.
+      const fetchSite = request.headers.get('Sec-Fetch-Site');
+      if (fetchSite && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+        return page('Ungültige Anfrage (fremde Webseite).', 403);
       }
       if(pathname==='/abmelden') return redirect(cookieName+'=; Max-Age=0'+suffix);
       let code='', csrf='';
